@@ -50,24 +50,37 @@ function syncChannelList(){
 		sync(usersID);
 	});
 	
-	
-	
 
 
 }
 
 
 function sync(usersID){
-
-	chrome.storage.sync.set({'synchronizedList' : usersID}, function(){
-		showMessage(true, "The list has been synchornized!");
-
-		chrome.storage.sync.get({'synchronizedList': []}, function(result){
+	chrome.storage.sync.get({'synchronizedList': []}, function(result){
  			synchronizedList = result.synchronizedList;
- 			showMessage(true, synchronizedList.length + " length " );
- 		});
+ 			var syncList = [];
 
-	});
+			for(var i = 0; i < usersID.length; i++){
+				var exists = false;
+				for(var j = 0; j < synchronizedList.length; j++){
+					if(usersID[i] == synchronizedList[i]){
+						exists = true;
+					}
+				}
+
+				if(exists){
+					syncList.push(usersID[i]);
+				}
+			}
+
+			chrome.storage.sync.set({'synchronizedList' : syncList}, function(){
+				showMessage(true, "The list has been synchornized!");
+			});
+
+
+ 	});
+
+
 }
 
 
