@@ -13,6 +13,7 @@ const TEMP = 1000 * 60;
 
 var liveChannels;
 var usersID = [];
+var synchronizedList = [];
 var notificationList = [];
 
 

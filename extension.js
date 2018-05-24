@@ -24,7 +24,9 @@ $("#addChannel").click(function(){
 });
 
 
-
+$("#syncList").click(function(){
+	syncChannelList();
+});
 
 
 function showList(){
@@ -33,12 +35,33 @@ function showList(){
 	chrome.storage.local.get({"usersID" : []}, function(result){
 		usersID = result.usersID;
 		createChannelList(usersID);
+		console.log(usersID.length + " the length");
 	});
 
 	
 
 	
 }
+
+
+//Synchronizes channel list
+function syncChannelList(){
+	
+	chrome.storage.sync.set({'synchronizedList' : usersID}, function(){
+		showMessage(true, "The list has been synchornized!");
+
+		chrome.storage.sync.get({'synchronizedList': []}, function(result){
+ 			synchronizedList = result.synchronizedList;
+ 			console.log(synchronizedList.length);
+ 		});
+
+	});
+	
+
+
+}
+
+
 
 
 function createChannelList(usersID){
@@ -227,12 +250,12 @@ function saveChannel(data){
 		if(!isAlreadyStored(userID, usersID)){
 			usersID.push({'id' : userID, 'username' : userName});
 			chrome.storage.local.set({'usersID' : usersID}, function(){
-				showMessage(true, "Channel added sucessfully");
+				showMessage(true, "The channel has been added sucessfully!");
 
 			});
 			
 		}else{
-			showMessage(false, "Channel is already saved");
+			showMessage(false, "The channel already exists.");
 		}
 	
 	});
