@@ -35,7 +35,6 @@ function showList(){
 	chrome.storage.local.get({"usersID" : []}, function(result){
 		usersID = result.usersID;
 		createChannelList(usersID);
-		console.log(usersID.length + " the length");
 	});
 
 	
@@ -46,7 +45,20 @@ function showList(){
 
 //Synchronizes channel list
 function syncChannelList(){
+		chrome.storage.local.get({"usersID" : []}, function(result){
+		usersID = result.usersID;
+		sync(usersID);
+	});
 	
+	
+	
+
+
+}
+
+
+function sync(usersID){
+
 	chrome.storage.sync.set({'synchronizedList' : usersID}, function(){
 		showMessage(true, "The list has been synchornized!");
 
@@ -56,11 +68,7 @@ function syncChannelList(){
  		});
 
 	});
-	
-
-
 }
-
 
 
 
