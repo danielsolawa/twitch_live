@@ -64,7 +64,7 @@ function sync(usersID){
 
 		chrome.storage.sync.get({'synchronizedList': []}, function(result){
  			synchronizedList = result.synchronizedList;
- 			console.log(synchronizedList.length);
+ 			showMessage(true, synchronizedList.length + " length " );
  		});
 
 	});
