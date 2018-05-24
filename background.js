@@ -29,17 +29,61 @@ setInterval(seekForLiveChannel, FIFTEEN_MIN_IN_MILLIS);
 function showAllLiveStreams(){
 	
 	liveChannels = [];
-	fetchStreamList();
+	syncStorage();
 	
 }
 
 
 function seekForLiveChannel(){
+/*
 
+*/
 
 	fetchStreamList();
 }
 
+//synchronizes  sync storage with local storage.
+function syncStorage(){
+	chrome.storage.sync.get({'synchronizedList': []}, function(result){
+		synchronizedList = result.synchronizedList;
+
+		chrome.storage.local.get({'usersID': []}, function(result){
+
+	 	usersID = result.usersID;
+		
+	 	var syncList = [];
+
+		for(var i = 0; i < usersID.length; i++){
+			var exists = false;
+			for(var j = 0; j < synchronizedList.length; j++){
+				if(usersID[i] == synchronizedList[i]){
+					exists = true;
+				}
+			}
+
+			if(!exists){
+				syncList.push(usersID[i]);
+			}
+		}
+
+		saveAll(syncList);
+
+		});
+
+		
+	});
+
+}
+
+//merges local and sync storage.
+function saveAll(data){
+	chrome.storage.local.set({'usersID' : data}, function(){
+		console.log("local storage has been updated.");
+		fetchStreamList();
+	});
+
+
+}
 
 
 
@@ -104,7 +148,7 @@ function clearNotificationList(){
 
 	chrome.notifications.getAll(function(notfs){
 		console.log(notfs);
-		console.log("=============================================================");
+
 	});
 
 

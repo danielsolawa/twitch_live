@@ -68,7 +68,7 @@ function sync(usersID){
 					}
 				}
 
-				if(exists){
+				if(!exists){
 					syncList.push(usersID[i]);
 				}
 			}
