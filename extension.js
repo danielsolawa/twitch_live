@@ -5,13 +5,31 @@ const GET_BY_USER_ID = 'https://api.twitch.tv/kraken/users/';
 const GET_STREAM = 'https://api.twitch.tv/kraken/streams/';
 const ONE_HOUR_IN_MILLIS  = 1000 * 60  * 60;
 
-var streamPanelHidden = true;
+
 var list = [];
 var channelList = [];
+var LivePanelStatus = {
+  OFF: 1,
+  LOADING: 2,
+  ON: 3,
+};
+
+var livePanelStatus = LivePanelStatus.OFF;
+ 
+
 
 $("#showLive").click(function(){
-	checkForLive();
-	$("#main").toggle();
+	if(livePanelStatus == LivePanelStatus.OFF){
+		checkForLive();
+		$("#loading").toggle();
+		livePanelStatus = LivePanelStatus.LOADING;
+	}else if(livePanelStatus == LivePanelStatus.ON){
+		$("#main").toggle();
+		livePanelStatus = LivePanelStatus.OFF;
+	}
+	
+
+
     
 });
 
@@ -182,6 +200,15 @@ function fetchStreams(){
 		error : liveError
 	});
 	}
+
+	setTimeout(toggleList, 1500);
+}
+
+
+function toggleList(){
+	livePanelStatus = LivePanelStatus.ON;
+	$("#loading").toggle();
+	$("#main").toggle();
 }
 
 
@@ -210,8 +237,7 @@ function addToList(data){
 		list.appendChild(stream);
 		
 		$("#main").append(list);
-
-
+	
 		}
 
 		

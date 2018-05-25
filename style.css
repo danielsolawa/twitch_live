@@ -87,6 +87,13 @@ width : 400px;
   margin-top: 30px;
 }
 
+.loading{
+  margin-left: 5px;
+  height: 15px;
+  width: 15px;
+  display: none;
+}
+
 .inputChannel{
   margin-top: -10px;
   -webkit-box-sizing: content-box;
