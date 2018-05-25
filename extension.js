@@ -11,7 +11,8 @@ var channelList = [];
 
 $("#showLive").click(function(){
 	checkForLive();
-    $("#main").toggle();
+	$("#main").toggle();
+    
 });
 
 $("#manageStreams").click(function(){
@@ -250,9 +251,9 @@ function addStreamToList(){
 
 function checkChannel(data){
 	$("#streamName").val("");
-	
 	if(data.users.length == 0){
-		wrongName();
+		var message = "Wrong channel name";
+		showMessage(false, message);
 	}else{
 		saveChannel(data);
 	}
@@ -290,32 +291,26 @@ function showMessage(isSuccess, message){
 	var text = document.createElement("div");
 	
 	if(isSuccess){
-		text.setAttribute("class", "success");
+		$("#message").addClass("alertsuccess");
 	}else{
-		text.setAttribute("class", "error");
+		$("#message").addClass("alerterror");
 	}
 
 	text.appendChild(document.createTextNode(message));
 
 	$("#message").append(text);
-
-
-	setTimeout(clearMessageTab, 3000);
+  	$("#message").toggle();
+	setTimeout(clearMessageTab, 2000);
 }
 
-function wrongName(){
-	var error = document.createElement("div");
-	error.setAttribute("class", "error");
-	error.appendChild(document.createTextNode("Wrong channel name"));
-	
-	$("#message").append(error);
 
-	setTimeout(clearMessageTab, 3000);
-}
 
 
 function clearMessageTab(){
 	$("#message").html("");
+	$("#message").removeClass();
+	$("#message").toggle();
+
 }
 
 function isAlreadyStored(userID, usersID){

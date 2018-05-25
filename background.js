@@ -42,40 +42,23 @@ function seekForLiveChannel(){
 	fetchStreamList();
 }
 
-//synchronizes  sync storage with local storage.
+//synchronizes sync storage with local storage.
 function syncStorage(){
 	chrome.storage.sync.get({'synchronizedList': []}, function(result){
 		synchronizedList = result.synchronizedList;
 
 		chrome.storage.local.get({'usersID': []}, function(result){
-
-	 	usersID = result.usersID;
-		
-	 	var syncList = [];
-
-		for(var i = 0; i < usersID.length; i++){
-			var exists = false;
-			for(var j = 0; j < synchronizedList.length; j++){
-				if(usersID[i] == synchronizedList[i]){
-					exists = true;
-				}
-			}
-
-			if(!exists){
-				syncList.push(usersID[i]);
-			}
-		}
-
-		saveAll(syncList);
-
-		});
+		 	usersID = result.usersID;
+		 	var syncList = mergeStorage(usersID, synchronizedList);
+			saveAll(syncList);
+			});
 
 		
 	});
 
 }
 
-//merges local and sync storage.
+//saves all data.
 function saveAll(data){
 	chrome.storage.local.set({'usersID' : data}, function(){
 		console.log("local storage has been updated.");
@@ -83,6 +66,26 @@ function saveAll(data){
 	});
 
 
+}
+
+//Merges local and sync storage
+function mergeStorage(locStorage, syncStorage){
+
+	var syncList = [];
+	for(var i = 0; i < locStorage.length; i++){
+			var exists = false;
+			for(var j = 0; j < syncStorage.length; j++){
+				if(locStorage[i] == syncStorage[i]){
+					exists = true;
+				}
+			}
+
+			if(!exists){
+				syncList.push(locStorage[i]);
+			}
+	}
+
+	return syncList;
 }
 
 

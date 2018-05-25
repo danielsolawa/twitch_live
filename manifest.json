@@ -1,11 +1,11 @@
 {
-	"name": "Twitch Live",
-	"version": "1.0",
-	"manifest_version": 2,
-	"description": "Twitch Live allows you to follow your favorite streamers any time they are live",
+	"name": "T Live",
+	"version": "1.1",
+	"manifest_version": 3,
+	"description": "T Live is a free chrome extension which allows you to track your favorite streamers.",
 	"browser_action": {
 		"default_icon": "icon.png",
-		"default_title": "Twitch Live",
+		"default_title": "T Live",
 		"default_popup": "popup.html"
 	},
 	"background":{
