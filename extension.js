@@ -233,18 +233,27 @@ function addStreamToList(){
 	var streamName = document.getElementById("streamName").value;
 
 	if(streamName.length > 0){
+		var finalName = getChannelName(streamName);
+
 			$.ajax({
 		type : 'GET',
-		url: GET_BY_USERNAME + streamName,
+		url: GET_BY_USERNAME + finalName,
 		headers : {'Accept' :  ACCEPT_HEADER, 'Client-ID' : CLIENT_ID},
 		success : checkChannel,
 		error : saveError
 	});
+
 	}else{
 		showMessage(false, "This field can't be empty");
 	}
 
 
+}
+
+function getChannelName(streamName){
+	var name = streamName.split("/");
+
+	return name[name.length-1];
 }
 
 
