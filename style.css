@@ -54,13 +54,18 @@ width : 400px;
 
   padding-left: 20px;
   padding-top: 20px;
-
+  margin-top: -20px;
+  margin-bottom: -20px;
 
 }
 
 .managePanel{
   padding-top: 10px;
   padding-left: 80px;
+}
+
+.formDiv{
+  margin-bottom: 20px;
 }
 
 
@@ -155,8 +160,8 @@ width : 400px;
   cursor: pointer;
   padding: 8px 20px 16px;
   border: 1px solid;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 1px;
+  border-radius: 1px;
   border-color: #000000;
   font: normal 16px/normal "Times New Roman", Times, serif;
   color: rgba(255,255,255,0.9);
@@ -212,6 +217,9 @@ display: inline-block;
   text-transform: none;
 }
 
+.dText{
+  display: none;
+}
 
 /*
   the Alert box
@@ -229,7 +237,7 @@ display: inline-block;
   color:#ffffff;
   font-family:Arial;
   font-size:17px;
-  padding:16px 31px;
+  padding:6px 15px;
   text-decoration:none;
   text-shadow:0px 1px 0px #2f6627;
   display: none;
@@ -247,7 +255,7 @@ display: inline-block;
   color:#ffffff;
   font-family:Arial;
   font-size:17px;
-  padding:16px 31px;
+  padding:6px 15px;
   text-decoration:none;
   text-shadow:0px 1px 0px #2f6627;
   display: none;

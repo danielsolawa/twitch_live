@@ -5,19 +5,22 @@ const GET_BY_USER_ID = 'https://api.twitch.tv/kraken/users/';
 const GET_STREAM = 'https://api.twitch.tv/kraken/streams/';
 const ONE_HOUR_IN_MILLIS  = 1000 * 60  * 60;
 
-
-var list = [];
-var channelList = [];
 var LivePanelStatus = {
   OFF: 1,
   LOADING: 2,
   ON: 3,
 };
 
+var list = [];
+var channelList = [];
+
+
+//Default live panel state
 var livePanelStatus = LivePanelStatus.OFF;
- 
 
 
+
+//Loads live stream list
 $("#showLive").click(function(){
 	if(livePanelStatus == LivePanelStatus.OFF){
 		checkForLive();
@@ -26,43 +29,33 @@ $("#showLive").click(function(){
 	}else if(livePanelStatus == LivePanelStatus.ON){
 		$("#main").toggle();
 		livePanelStatus = LivePanelStatus.OFF;
-	}
-	
-
-
-    
+	} 
 });
 
-$("#manageStreams").click(function(){
+//Channel list
+$("#menageStreams").click(function(){
 	showList();
-    $("#manage").toggle();
+    $("#menage").toggle();
 });
 
+//Adds new channel
 $("#addChannel").click(function(){
 	addStreamToList();
 });
 
-
+//Syncs list
 $("#syncList").click(function(){
 	syncChannelList();
 });
 
 
-function showList(){
-	
-	
-	chrome.storage.local.get({"usersID" : []}, function(result){
-		usersID = result.usersID;
-		createChannelList(usersID);
-	});
-
-	
-
-	
-}
 
 
-//Synchronizes channel list
+
+/*
+ * SYNC 
+ *
+ */ 
 function syncChannelList(){
 		chrome.storage.local.get({"usersID" : []}, function(result){
 		usersID = result.usersID;
@@ -103,11 +96,24 @@ function sync(usersID){
 }
 
 
+/*
+ * MENAGE LIST 
+ *
+ */ 
+function showList(){
+	
+	
+	chrome.storage.local.get({"usersID" : []}, function(result){
+		usersID = result.usersID;
+		createChannelList(usersID);
+	});
+
+}
 
 function createChannelList(usersID){
 
 
-	$("#manage").html("");
+	$("#menage").html("");
 
 	for(var i = 0; i < usersID.length; i++){
 			var us = usersID[i].id;
@@ -134,7 +140,7 @@ function createChannelList(usersID){
 
 			
 
-		$("#manage").append(listDiv);
+		$("#menage").append(listDiv);
 	}
 
 
@@ -142,12 +148,18 @@ function createChannelList(usersID){
 
 
 function removeFromList(e){
-	var index = getIndex(this.id);
-	if(index > -1){
-		var streamToRemove = $("." + this.id);
-		removeFromStorage(index);
-		streamToRemove.remove();
-	}
+	var channel = getChannel(this.id);
+	var message = "This channel will be permanently removed from the list. Are you sure?";
+	var title = "Remove " + channel.name + " from the list.";
+	
+	showDialog(message, title,
+		function(){
+			if(channel.index > -1){
+				removeFromStorage(channel.index);
+				showList();
+			}
+		});
+
 	
 }
 
@@ -157,24 +169,31 @@ function removeFromStorage(index){
 
 	chrome.storage.local.set({'usersID' : usersID}, function(){
 				 $("#manage").toggle();
-				showMessage(true, "Channel removed sucessfully");
+				showMessage(true, "Channel has been removed sucessfully");
 
 			});
 
 }
 
 
-function getIndex(id){
+function getChannel(id){
+	var channel = {};
 	for(var i = 0; i < usersID.length; i++){
 		if(usersID[i].id == id){
-			return i;
+			channel.index  = i;
+			channel.name = usersID[i].username;
+			return channel;
 		}
 	}
+	channel.index = -1;
 
-	return -1;
+	return channel;
 }
 
-
+/*
+ * LIVE CHANNELS 
+ *
+ */ 
 
 // Checks is any channel live
 function checkForLive(){
@@ -252,9 +271,13 @@ function liveError(){
 	console.log("something went wrong");
 }
 
+/*
+ * ADD CHANNEL TO LIST 
+ *
+ */ 
+
 
 //adds channel to local storage
-
 function addStreamToList(){
 	var streamName = document.getElementById("streamName").value;
 
@@ -275,7 +298,7 @@ function addStreamToList(){
 
 
 }
-
+//extracts channel name from url
 function getChannelName(streamName){
 	var name = streamName.split("/");
 
@@ -308,7 +331,7 @@ function saveChannel(data){
 			usersID.push({'id' : userID, 'username' : userName});
 			chrome.storage.local.set({'usersID' : usersID}, function(){
 				showMessage(true, "The channel has been added sucessfully!");
-
+				showList();
 			});
 			
 		}else{
@@ -320,6 +343,76 @@ function saveChannel(data){
 	
 
 }
+
+function isAlreadyStored(userID, usersID){
+
+	for(var i = 0; i < usersID.length; i++){
+		if(usersID[i].id == userID){
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+
+function saveError(){
+	alert("error");
+}
+
+/*
+ * DIALOGS
+ *
+ */ 
+
+function showDialog(message, title, confirm){
+	openDialog(message, title);
+
+	$( function() {
+    $( "#dialog-confirm" ).dialog({
+      resizable: false,
+      height: "auto",
+      width: 400,
+      modal: true,
+       open: function () {
+                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                    },
+      beforeClose: function( event, ui ) {
+		closeDialog();
+      },
+      buttons: {
+        "Delete ": function() {
+          confirm();
+          $( this ).dialog( "close" );
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+  	});
+}
+
+
+function openDialog(message, title){
+	 $("#dialog-confirm").attr("title", title);
+	 $("#dText").append(document.createTextNode(message));
+	 $("#dText").toggle();
+}
+
+
+function closeDialog(){
+	 $("#dText").html("");
+	 $("#dText").toggle();
+	 $( "#dialog-confirm" ).dialog( "destroy" );
+}
+
+/*
+ * MESSAGES
+ *
+ */ 
+
 
 
 function showMessage(isSuccess, message){
@@ -348,22 +441,7 @@ function clearMessageTab(){
 
 }
 
-function isAlreadyStored(userID, usersID){
 
-	for(var i = 0; i < usersID.length; i++){
-		if(usersID[i].id == userID){
-			return true;
-		}
-	}
-
-	return false;
-
-}
-
-
-function saveError(){
-	alert("error");
-}
 
 
 

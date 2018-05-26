@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://platform.linkedin.com ">
     <title>Twitch Live</title>
  <link rel="stylesheet" type="text/css" href="style.css">   
-    
+  <link rel="stylesheet" type="text/css" href="jquery-ui.css">   
 </head>
 
 <body>
@@ -12,9 +12,7 @@
 
 
 <div class="container">
-		<div class="alert" id ="message">
-		
-		</div>
+		<div class="alert" id ="message"></div>
 		
 		<div class="formDiv">
 			<img src="twitch.png" class="twitchLogo">
@@ -27,15 +25,20 @@
 		</div>
 		<div id="main" class="streams"></div>	
 		<div class="streamPanel">
-			<button type="button" id="manageStreams" class="button2">Manage List</button>
+			<button type="button" id="menageStreams" class="button2">Menage List</button>
 		</div>
 
-		<div id="manage" class="streams"></div>
+		<div id="menage" class="streams"></div>
 		<div class="credits">Icons made by <a href="https://www.flaticon.com/authors/roundicons" title="Roundicons" target="_blank">Roundicons</a> from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" >www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+		</div>
+
+		<div id="dialog-confirm"  title="Remove from  the list">
+ 			 <p id="dText" class="dText"><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span></p>
 		</div>
 </div>
 
 <script src="jquery.js" type="text/javascript"></script>
+<script src="jquery-ui.js" type="text/javascript"></script>
 <script src="extension.js" type="text/javascript"></script>
 
 
